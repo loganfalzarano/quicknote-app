@@ -1,4 +1,18 @@
+import { Container, List, Fab, withStyles } from "@material-ui/core";
+import { Add } from "@material-ui/icons";
+
 import React, { Component } from "react"
+import Note from "./components/Note"
+
+const styles = {
+  fab: {
+    position: 'absolute',
+    bottom: "2rem",
+    right: "2rem",
+  }
+};
+
+
 
 class App extends Component {
   constructor(props) {
@@ -24,9 +38,29 @@ class App extends Component {
     };
   }
 
+  deleteNote = (note) => {
+    this.setState((state) => {
+      return {
+        notes: state.notes.filter((n) => n.id !== note.id),
+      };
+    });
+  };
+
   render() {
-    return (<pre>{JSON.stringify(this.state.notes, null, 2)}</pre>);
+    const {notes} = this.state;
+    return (
+      <Container>
+        <List>
+          {notes.map((note, index) => {
+            return <Note note={note} key={index} deleteNote={this.deleteNote}/>;
+          })}
+        </List>
+        <Fab aria-label={"Add"} className={this.props.classes.fab}>
+          <Add />
+        </Fab>
+      </Container>
+    );
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
